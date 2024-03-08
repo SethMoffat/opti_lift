@@ -6,13 +6,23 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
+    height: 100vh; /* Add this line */
   }
   
-  form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-  }
+  .form-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 300px;
+}
+
   
   label {
     margin-bottom: 10px;
@@ -35,6 +45,7 @@
     cursor: pointer;
   }
   
-  button:hover {
+
+  button.selected {
     background-color: #0056b3;
   }

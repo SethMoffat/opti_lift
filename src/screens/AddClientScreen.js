@@ -5,8 +5,22 @@ import './AddClientScreen.css';
 const AddClientScreen = () => {
   const [clientName, setClientName] = useState('');
   const [clientEmail, setClientEmail] = useState('');
-  const [dayOfWeek, setDayOfWeek] = useState('');
+  const [selectedDays, setSelectedDays] = useState([]); // Array to store selected days
   const [description, setDescription] = useState('');
+  const [isSuccess, setIsSuccess] = useState(null); // New state variable
+
+  const handleDayClick = (day) => {
+    const newSelectedDays = [...selectedDays];
+    if (newSelectedDays.includes(day)) {
+      // Remove day if already selected
+      const index = newSelectedDays.indexOf(day);
+      newSelectedDays.splice(index, 1);
+    } else {
+      // Add day if not selected
+      newSelectedDays.push(day);
+    }
+    setSelectedDays(newSelectedDays);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -14,7 +28,7 @@ const AddClientScreen = () => {
     const clientData = {
       name: clientName,
       email: clientEmail,
-      dayOfWeek,
+      dayOfWeek: selectedDays.join(','), // Join selected days with comma
       description,
     };
 
@@ -23,43 +37,51 @@ const AddClientScreen = () => {
       console.log(response.data);
       setClientName('');
       setClientEmail('');
-      setDayOfWeek('');
+      setSelectedDays([]);
       setDescription('');
+      setIsSuccess(true); // Set isSuccess to true if the client is successfully added
     } catch (error) {
       console.error(error);
+      setIsSuccess(false); // Set isSuccess to false if there's an error
     }
   };
 
+  const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
   return (
-    <div>
+    <div className="form-container">
       <form onSubmit={handleSubmit}>
         <label>
           Name:
-          <input type="text" value={clientName} onChange={e => setClientName(e.target.value)} />
+          <input type="text" value={clientName} onChange={(e) => setClientName(e.target.value)} />
         </label>
         <label>
           Email:
-          <input type="email" value={clientEmail} onChange={e => setClientEmail(e.target.value)} />
+          <input type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)} />
         </label>
         <label>
           Day of the Week:
-          <select value={dayOfWeek} onChange={e => setDayOfWeek(e.target.value)}>
-            <option value="">Select...</option>
-            <option value="Monday">Monday</option>
-            <option value="Tuesday">Tuesday</option>
-            <option value="Wednesday">Wednesday</option>
-            <option value="Thursday">Thursday</option>
-            <option value="Friday">Friday</option>
-            <option value="Saturday">Saturday</option>
-            <option value="Sunday">Sunday</option>
-          </select>
+          <div className="calendar-container">
+            {days.map(day => (
+              <button 
+                key={day} 
+                type="button" 
+                onClick={() => handleDayClick(day)} 
+                className={selectedDays.includes(day) ? 'selected' : ''}
+              >
+                {day}
+              </button>
+            ))}
+          </div>
         </label>
         <label>
           Description:
-          <textarea value={description} onChange={e => setDescription(e.target.value)} />
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
         </label>
         <button type="submit">Add Client</button>
       </form>
+      {isSuccess === true && <p>Client successfully added!</p>}
+      {isSuccess === false && <p>There was an error adding the client.</p>}
     </div>
   );
 };
