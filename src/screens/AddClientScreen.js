@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { createClient } from '@supabase/supabase-js';
 import './AddClientScreen.css';
+
+const supabaseUrl = 'https://gqeuwuskthqhzypobrmf.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdxZXV3dXNrdGhxaHp5cG9icm1mIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDk5MjYyNDgsImV4cCI6MjAyNTUwMjI0OH0.o-VhM1UxIe-75_iPn5HfQUnIwOub9oWnzbh7CJhY-5M';
+
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const AddClientScreen = () => {
   const [clientName, setClientName] = useState('');
@@ -22,31 +27,50 @@ const AddClientScreen = () => {
     setSelectedDays(newSelectedDays);
   };
 
-  const handleSubmit = async (e) => {
+  const handleAddClient = async (e) => {
     e.preventDefault();
 
     const clientData = {
       name: clientName,
       email: clientEmail,
-      dayOfWeek: selectedDays.join(','), // Join selected days with comma
+      dayOfWeek: selectedDays.join(','),
       description,
     };
 
+    console.log('Client data to be sent:', clientData);
+
     try {
-      const response = await axios.post('https://api.example.com/clients', clientData);
-      console.log(response.data);
+      console.log('Attempting to insert data into Supabase...'); // New log
+      const { data, error } = await supabase
+        .from('clients')
+        .insert(clientData);
+
+      console.log('Supabase response:', data, error); // Log response and error
+
+      if (error) {
+        console.error('Error during insert:', error);
+        setIsSuccess(false);
+        return;
+      }
+
+      console.log('Client added successfully:', data);
       setClientName('');
       setClientEmail('');
       setSelectedDays([]);
       setDescription('');
-      setIsSuccess(true); // Set isSuccess to true if the client is successfully added
+      setIsSuccess(true);
     } catch (error) {
-      console.error(error);
-      setIsSuccess(false); // Set isSuccess to false if there's an error
+      console.error('Error in insert operation:', error);
+      setIsSuccess(false);
     }
   };
 
+  const handleSubmit = async (e) => {
+    handleAddClient(e);
+  };
+
   const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
 
   return (
     <div className="form-container">
@@ -63,10 +87,10 @@ const AddClientScreen = () => {
           Day of the Week:
           <div className="calendar-container">
             {days.map(day => (
-              <button 
-                key={day} 
-                type="button" 
-                onClick={() => handleDayClick(day)} 
+              <button
+                key={day}
+                type="button"
+                onClick={() => handleDayClick(day)}
                 className={selectedDays.includes(day) ? 'selected' : ''}
               >
                 {day}
