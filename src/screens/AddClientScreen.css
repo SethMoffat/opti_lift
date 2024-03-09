@@ -1,19 +1,21 @@
 /* AddClientScreen.css */
 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    height: 100vh; /* Add this line */
-  }
-  
-  .form-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 20px;
+  height: 100vh; /* Add this line */
+}
+
+.form-container {
+  display: flex;
+  flex-direction: column; /* Change this from center to column */
+  align-items: center;
+  justify-content: center;
   height: 100vh;
+  position: relative; /* Add this line */
 }
 
 form {
@@ -23,29 +25,35 @@ form {
   width: 300px;
 }
 
-  
-  label {
-    margin-bottom: 10px;
-  }
-  
-  input, select, textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  button {
-    padding: 10px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
+label {
+  margin-bottom: 10px;
+}
 
-  button.selected {
-    background-color: #0056b3;
-  }
+input, select, textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 10px;
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button.selected {
+  background-color: #0056b3;
+}
+
+/* Add this new class for the messages */
+.message {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+}
