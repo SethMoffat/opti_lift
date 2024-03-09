@@ -8,6 +8,7 @@ const HomeScreen = () => {
             <h1>Welcome to opti-lift</h1>
             <Link to="/client" className="home__button">Client Screen</Link>
             <Link to="/add_client" className="home__button">Add Client Screen</Link>
+            <Link to="/calendar" className="home__button">Calendar Screen</Link> {/* Add this line */}
         </div>
     );
 };
